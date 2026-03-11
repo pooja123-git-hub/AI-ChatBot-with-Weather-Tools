@@ -11,7 +11,7 @@ export class ChatService {
 
   async chat(messages: UIMessage[], model: string, res: express.Response) {
 
-    const modelMessages: ModelMessage[] =  [
+    const modelMessages: ModelMessage[] = [
       {
         role: "system",
         content: this.getSystemPrompt()
@@ -25,14 +25,21 @@ export class ChatService {
       tools: this.toolsService.getAllTools(),
     });
 
-    console.log(process.env.GOOGLE_GENERATIVE_AI_API_KEY);
-    console.log(messages);
-
     return result.pipeUIMessageStreamToResponse(res);
   }
 
   private getSystemPrompt() {
-    return 'You are a generative AI assistant. You can use tools to get information about the weather. Always use the tool when the user asks about the weather.';
+    return `
+You are a helpful AI assistant.
+
+You can answer general questions normally.
+
+You have access to a weather tool called getWeather.
+
+If the user asks about weather in a location, call the tool.
+
+Otherwise answer normally.
+`;
   }
 
 }
